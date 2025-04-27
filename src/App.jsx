@@ -1,27 +1,35 @@
 import { useEffect, useState } from 'react';
+import './App.css';
 
 function App() {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    fetch('/api/products') // Memanggil API produk dari backend
+    fetch('/api/products')
       .then(res => res.json())
       .then(data => setProducts(data))
       .catch(err => console.error('Fetch error:', err));
   }, []);
 
   return (
-    <div>
-      <h1>Daftar Produk</h1>
-      <ul>
-        {products.map(p => (
-          <li key={p.id}>
-            <h3>{p.name}</h3>
-            <p>Harga: Rp {parseInt(p.price).toLocaleString()}</p>
-            <img src={p.image_url} alt={p.name} width="150" />
-          </li>
+    <div className="container">
+      <h1 className="main-title">Daftar Produk</h1>
+      <div className="product-grid">
+        {products.map((product) => (
+          <div key={product.id} className="product-card">
+            <img
+              src={product.image_url}
+              alt={product.name}
+              className="product-image"
+            />
+            <div className="product-details">
+              <h3 className="product-name">{product.name}</h3>
+              <p className="product-price">Rp {parseInt(product.price).toLocaleString()}</p>
+              <button className="buy-button">Beli Sekarang</button>
+            </div>
+          </div>
         ))}
-      </ul>
+      </div>
     </div>
   );
 }
