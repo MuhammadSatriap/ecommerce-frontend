@@ -1,0 +1,28 @@
+name: Deploy Frontend ke EC2 Otomatis
+
+on:
+  push:
+    branches:
+      - master # atau master, sesuaikan nama branch repo kamu
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repo
+      uses: actions/checkout@v4
+
+    - name: Deploy ke EC2 pakai SSH
+      uses: appleboy/ssh-action@v0.1.7
+      with:
+        host: ${{ secrets.EC2_PUBLIC_IP }}
+        username: ec2-user
+        key: ${{ secrets.EC2_SSH_KEY }}
+        script: |
+          cd ecommerce-frontend
+          git pull origin master
+          npm install
+          npm run build
+          sudo rm -rf /usr/share/nginx/html/*
+          sudo cp -r dist/* /usr/share/nginx/html/
